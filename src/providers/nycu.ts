@@ -23,7 +23,6 @@ export default function NYCUProvider<P extends NYCUProfile>({
     userinfo: "https://id.nycu.edu.tw/api/profile/",
 
     profile(profile) {
-      console.log(profile);
       return {
         id: profile.username,
         email: profile.email,
