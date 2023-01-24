@@ -1,19 +1,26 @@
-import type { OAuthUserConfig, Provider } from "next-auth/providers";
+import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
 
-export default function NYCUProvider({
+export interface NYCUProfile extends Record<string, any> {
+  username: string;
+  email: string;
+}
+
+export default function NYCUProvider<P extends NYCUProfile>({
   clientId,
   clientSecret,
-}: OAuthUserConfig<{}>): Provider {
+}: OAuthUserConfig<P>): OAuthConfig<P> {
   return {
     id: "nycu",
     name: "NYCU",
     type: "oauth",
+
     authorization: {
       url: "https://id.nycu.edu.tw/o/authorize/",
-      params: { response_type: "code", scope: "profile" },
+      params: { scope: "profile" },
     },
     token: "https://id.nycu.edu.tw/o/token/",
     userinfo: "https://id.nycu.edu.tw/api/profile/",
+
     profile(profile) {
       console.log(profile);
       return {
