@@ -1,5 +1,6 @@
 import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface NYCUProfile extends Record<string, any> {
   username: string;
   email: string;
