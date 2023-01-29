@@ -11,12 +11,12 @@ export const useSession = <R extends boolean>(
 ):
   | SessionContextValue<R>
   | { readonly data: null; readonly status: "loading" } => {
-  /* eslint-disable react-hooks/rules-of-hooks */
+  const nextAuthSession = useNextAuthSession(options);
 
   const mockedRole = env.NEXT_PUBLIC_MOCK_ROLE;
 
   if (mockedRole == null) {
-    return useNextAuthSession(options);
+    return nextAuthSession;
   }
 
   const session = getMockSession(mockedRole);

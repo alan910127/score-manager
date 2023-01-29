@@ -19,4 +19,4 @@ Commit message: prefix with an [meaningful emoji](https://gitmoji.dev)
 
 To mock NextAuth in development, you should set the environment variable `NEXT_PUBLIC_MOCK_ROLE` to `admin`, `ta` or `student` in your `.env` file.
 
-> ⚠️ Switching between mocking or not needs manual refresh on the client side and might cause some error, don't panic! Just give it a second and it will be settled. ⚠️
+⚠️ Switching between mocking or not needs manual refresh on the client side. ⚠️
