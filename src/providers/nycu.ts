@@ -25,6 +25,7 @@ export default function NYCUProvider<P extends NYCUProfile>({
     profile(profile) {
       return {
         id: profile.username,
+        name: profile.username,
         email: profile.email,
       };
     },
