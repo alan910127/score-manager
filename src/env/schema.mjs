@@ -44,6 +44,7 @@ export const serverEnv = {
  */
 export const clientSchema = z.object({
   NEXT_PUBLIC_MOCK_ROLE: z.string().optional(),
+  NEXT_PUBLIC_MOCK_NEXTAUTH: z.boolean().default(false),
 });
 
 /**
@@ -54,4 +55,5 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   NEXT_PUBLIC_MOCK_ROLE: process.env.NEXT_PUBLIC_MOCK_ROLE,
+  NEXT_PUBLIC_MOCK_NEXTAUTH: process.env.NEXT_PUBLIC_MOCK_NEXTAUTH === "true",
 };
