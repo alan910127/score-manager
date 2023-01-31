@@ -5,7 +5,6 @@ import type { CredentialsConfig } from "next-auth/providers";
 import { createSessionJWT, createSignInCallback } from "./callbacks";
 
 type WithMockProvidersConfig = {
-  adapter: Adapter;
   provider: CredentialsConfig;
   enabled?: boolean;
 };
@@ -14,23 +13,30 @@ export const withMockProvider = (
   authOptions: NextAuthOptions,
   config: WithMockProvidersConfig
 ): NextApiHandler => {
-  const { provider, adapter, enabled = false } = config ?? {};
+  const { provider, enabled = false } = config ?? {};
   const providerId =
     (provider.options?.id as string | undefined) ?? provider.id;
+  const adapter = authOptions.adapter as Adapter;
 
   if (enabled) {
     authOptions.providers.push(provider);
   }
 
   return async (req, res) => {
-    authOptions.callbacks = {
-      ...authOptions.callbacks,
-      signIn: createSignInCallback(req, res, {
+    if (enabled) {
+      authOptions.callbacks = {
+        ...authOptions.callbacks,
+        signIn: createSignInCallback(req, res, {
+          adapter,
+          providerId,
+        }),
+      };
+
+      authOptions.jwt = createSessionJWT(req, res, {
         adapter,
         providerId,
-      }),
-    };
-    authOptions.jwt = createSessionJWT(req, res, providerId);
+      });
+    }
 
     // eslint-disable-next-line
     return await NextAuth(req, res, authOptions);

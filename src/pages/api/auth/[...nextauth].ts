@@ -30,7 +30,6 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default withMockProvider(authOptions, {
-  adapter,
   provider: MockProvider({
     id: "mock-nycu",
     name: "Mock NYCU",
