@@ -1,9 +1,8 @@
 import { type NextPage } from "next";
-import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 
-import { useSession } from "@/mock/useSession";
 import { api } from "@/utils/api";
 
 const Home: NextPage = () => {
@@ -51,6 +50,26 @@ const Home: NextPage = () => {
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
             <AuthShowcase />
+            <div className="flex gap-4">
+              <button
+                className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                onClick={() => void signIn("mock-nycu", { role: "admin" })}
+              >
+                As Admin
+              </button>
+              <button
+                className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                onClick={() => void signIn("mock-nycu", { role: "ta" })}
+              >
+                As TA
+              </button>
+              <button
+                className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                onClick={() => void signIn("mock-nycu", { role: "student" })}
+              >
+                As Student
+              </button>
+            </div>
           </div>
         </div>
       </main>
