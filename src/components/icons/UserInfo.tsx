@@ -1,8 +1,10 @@
+import { HiOutlineUserCircle } from "react-icons/hi";
+
 export const UserInfoIcon = () => {
   return (
     <>
-      <span className="material-symbols-outlined text-3xl">account_circle</span>
-      {/* <HiOutlineUserCircle size={30} /> */}
+      {/* <span className="material-symbols-outlined text-3xl">account_circle</span> */}
+      <HiOutlineUserCircle size={30} />
       <svg className="mt-1 h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
         <path
           fillRule="evenodd"
