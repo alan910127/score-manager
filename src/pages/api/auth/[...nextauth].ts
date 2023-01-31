@@ -1,38 +1,40 @@
-import NextAuth, { type NextAuthOptions } from "next-auth";
-// Prisma adapter for NextAuth, optional and can be removed
+import { type NextAuthOptions } from "next-auth";
+
+import { prisma } from "@/server/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { env } from "@/env/server.mjs";
+import { MockProvider, withMockProvider } from "@/mock/auth";
+import { mockUsers } from "@/mock/mockUsers";
 import NYCUProvider from "@/providers/nycu";
-import { prisma } from "@/server/db";
+
+const adapter = PrismaAdapter(prisma);
 
 export const authOptions: NextAuthOptions = {
-  // Include user.id on session
   callbacks: {
     session({ session, user }) {
+      // Include user.id on session
       if (session.user) {
         session.user.id = user.id;
       }
       return session;
     },
   },
-  // Configure one or more authentication providers
-  adapter: PrismaAdapter(prisma),
+  adapter,
   providers: [
     NYCUProvider({
       clientId: env.NYCUAUTH_CLIENT_ID,
       clientSecret: env.NYCUAUTH_CLIENT_SECRET,
     }),
-    /**
-     * ...add more providers here
-     *
-     * Most other providers require a bit more work than the Discord provider.
-     * For example, the GitHub provider requires you to add the
-     * `refresh_token_expires_in` field to the Account model. Refer to the
-     * NextAuth.js docs for the provider you want to use. Example:
-     * @see https://next-auth.js.org/providers/github
-     */
   ],
 };
 
-export default NextAuth(authOptions);
+export default withMockProvider(authOptions, {
+  provider: MockProvider({
+    id: "mock-nycu",
+    name: "Mock NYCU",
+    identifier: "role",
+    mockUsers,
+  }),
+  enabled: env.NEXT_PUBLIC_MOCK_NEXTAUTH,
+});
