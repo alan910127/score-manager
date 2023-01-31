@@ -12,10 +12,18 @@ const adapter = PrismaAdapter(prisma);
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session({ session, user }) {
+    async session({ session, user }) {
       // Include user.id on session
       if (session.user) {
         session.user.id = user.id;
+
+        const nycuAccount = await prisma.account.findFirst({
+          where: { userId: user.id, provider: "nycu" },
+          select: { providerAccountId: true },
+        });
+        if (nycuAccount) {
+          session.user.name = nycuAccount.providerAccountId;
+        }
       }
       return session;
     },
