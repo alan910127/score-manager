@@ -3,7 +3,40 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 
+import { env } from "@/env/client.mjs";
+import { type Role } from "@/mock/mockUsers";
 import { api } from "@/utils/api";
+
+const RoleSwitch = () => {
+  if (!env.NEXT_PUBLIC_MOCK_NEXTAUTH) return null;
+
+  const switchRole = async (role: Role) => {
+    await signIn("mock-nycu", { role }).catch(console.error);
+  };
+
+  return (
+    <div className="flex gap-4">
+      <button
+        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+        onClick={() => void switchRole("admin")}
+      >
+        As Admin
+      </button>
+      <button
+        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+        onClick={() => void switchRole("ta")}
+      >
+        As TA
+      </button>
+      <button
+        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+        onClick={() => void switchRole("student")}
+      >
+        As Student
+      </button>
+    </div>
+  );
+};
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -50,26 +83,7 @@ const Home: NextPage = () => {
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
             <AuthShowcase />
-            <div className="flex gap-4">
-              <button
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                onClick={() => void signIn("mock-nycu", { role: "admin" })}
-              >
-                As Admin
-              </button>
-              <button
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                onClick={() => void signIn("mock-nycu", { role: "ta" })}
-              >
-                As TA
-              </button>
-              <button
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-                onClick={() => void signIn("mock-nycu", { role: "student" })}
-              >
-                As Student
-              </button>
-            </div>
+            <RoleSwitch />
           </div>
         </div>
       </main>
