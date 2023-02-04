@@ -1,9 +1,59 @@
+version: "3"
+
 services:
   db:
-    image: postgres
-    ports:
-      - 5432:5432
+    container_name: db
+    image: postgres:alpine
     environment:
       - POSTGRES_USER=app
       - POSTGRES_PASSWORD=app
       - POSTGRES_DB=db
+    networks:
+      - my_network
+  
+  db-push:
+    container_name: db-push
+    build: .
+    depends_on:
+      - db
+    networks:
+      - my_network
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    command: npx prisma db push
+
+  app:
+    container_name: app
+    build: .
+    depends_on:
+      - db
+      - db-push
+    networks:
+      - my_network
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 3000:3000
+    command: npm run dev
+  
+  prisma-studio:
+    container_name: prisma-studio
+    build: .
+    depends_on:
+      - db
+      - db-push
+    networks: 
+      - my_network
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports: 
+      - 5555:5555
+    command: npx prisma studio
+
+networks:
+  my_network:
+
+volumes:
+  .:
